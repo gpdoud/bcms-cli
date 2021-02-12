@@ -1,5 +1,10 @@
-﻿using System;
+﻿using Doudsystems.Bcms.Cli.Utility;
+
+using DSI.BcmsServer.Models;
+
+using System;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Doudsystems.Bcms.Cli {
@@ -12,7 +17,11 @@ namespace Doudsystems.Bcms.Cli {
             var http = new HttpClient();
             try {
                 var res = await http.GetStringAsync($"{baseurl}/attendances/{id}");
-                Console.WriteLine(res);
+                var options = new JsonSerializerOptions() {
+                    WriteIndented = true, PropertyNameCaseInsensitive = true
+                };
+                var attendance = JsonSerializer.Deserialize<Attendance>(res, options);
+                attendance.Write();
             } catch(Exception ex) {
                 Console.WriteLine($"Exception: {ex.Message}");
             }

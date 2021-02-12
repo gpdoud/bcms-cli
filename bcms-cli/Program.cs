@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Doudsystems.Bcms.Cli {
 
     class Program {
 
-        async void Run(IDictionary<string, string> parms) {
+        async Task Run(IDictionary<string, string> parms) {
 
             DumpParms(parms);
 
@@ -27,9 +28,10 @@ namespace Doudsystems.Bcms.Cli {
             }
         }
     
-        static void Main(string[] args) {
+        static async Task Main(string[] args) {
             var parms = Args.Parse(args);
-            (new Program()).Run(parms);
+            var pgm = new Program();
+            await pgm.Run(parms);
         }
     }
 }

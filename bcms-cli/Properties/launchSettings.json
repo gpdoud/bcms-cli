@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "bcms-cli": {
+      "commandName": "Project",
+      "commandLineArgs": "getattendancebyid --id 15746",
+      "sqlDebugging": true
+    }
+  }
+}
