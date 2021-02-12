@@ -5,40 +5,33 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Doudsystems.Bcms.Cli {
-    
+
+    /// <summary>
+    /// Args - parses the command line
+    ///
+    /// Parameters start with double dash (i.e. --p1, --a)
+    /// Optionaly values for parameters are separated by a space (i.e. --a 123 --b 456 --c --d)
+    ///
+    /// The dictionary returned will have the parameter with the dashes as the key
+    /// and the value or null as the data
+    /// </summary>
     internal class Args {
 
         static Dictionary<string, string> parms = new Dictionary<string, string>();
 
         internal static IDictionary<string, string> Parse(string[] args) {
-
-            string key = null;
-            var firstTime = true;
-
-            foreach(var arg in args) {
-                if(firstTime) {
-                    AddParm("cmd", arg);
-                    firstTime = !firstTime;
+            var arguments = new List<string>(args);
+            arguments.Add("--");
+            for(var idx = 0; idx < arguments.Count - 1; idx++) {
+                var key = arguments[idx];
+                if (!key.StartsWith("--"))
                     continue;
-                }
-                if(arg.StartsWith("--")) {
-                    if(key != null) { // still have a key with no data
-                        AddParm(key, null);
-                        key = null;
-                    }
-                    key = arg;
-                } else { // no dashes, must be data; write key value
-                    AddParm(key, arg);
-                    key = null;
-                }
+                var val = arguments[idx + 1].StartsWith("--") ? null : arguments[idx + 1];
+                parms.Add(key, val);
             }
-            if(key != null) {
-                AddParm(key, null);
-            }
+
             return parms;
         }
-        private static void AddParm(string key, string val) {
-            parms.Add(key, val);
-        }
+
     }
 }
