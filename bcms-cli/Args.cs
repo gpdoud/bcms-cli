@@ -22,6 +22,9 @@ namespace Doudsystems.Bcms.Cli {
         internal static IDictionary<string, string> Parse(string[] args) {
             var arguments = new List<string>(args);
             arguments.Add("--");
+            // 1st arg is the command
+            parms.Add("cmd", arguments[0]);
+            arguments.RemoveAt(0);
             for(var idx = 0; idx < arguments.Count - 1; idx++) {
                 var key = arguments[idx];
                 if (!key.StartsWith("--"))
