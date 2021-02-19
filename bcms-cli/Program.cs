@@ -10,14 +10,23 @@ namespace Doudsystems.Bcms.Cli {
 
             DumpParms(parms);
 
+            var bcms = new BcmsApi();
+
             var cmd = parms["cmd"].ToLower();
+            
             switch(cmd) {
+                case "fix":
+                    int id = Convert.ToInt32(parms["--id"]);
+                    var inDate = Convert.ToDateTime(parms["--inDate"]);
+                    var outDate = Convert.ToDateTime(parms["--outDate"]);
+                    await bcms.SetAttendanceInOut(id, inDate, outDate);
+                    break;
                 case "getattendancebyid":
-                    var id = Convert.ToInt32(parms["--id"]);
-                    await BcmsApi.GetAttendanceByPk(id);
+                    id = Convert.ToInt32(parms["--id"]);
+                    await bcms.GetAttendanceByPk(id);
                     break;
                 case "test":
-                    BcmsApi.Test();
+                    bcms.Test();
                     break;
             }
         }

@@ -13,7 +13,17 @@ namespace Doudsystems.Bcms.Cli {
 
         const string baseurl = "http://doudsystems.com/bcms/dsi";
 
-        public async static Task GetAttendanceByPk(int id) {
+        public async Task SetAttendanceInOut(int id, DateTime? inDate, DateTime? outDate) {
+            var http = new HttpClient();
+            var res = await http.GetStringAsync($"{baseurl}/attendances/{id}");
+            var attn = Json2Attendance(res);
+            if (inDate != null) attn.In = inDate.Value;
+            if (outDate != null) attn.Out = outDate.Value;
+            var req = Attendance2Json(attn);
+            Console.WriteLine(req);
+        }
+
+        public async Task GetAttendanceByPk(int id) {
             var http = new HttpClient();
             try {
                 var res = await http.GetStringAsync($"{baseurl}/attendances/{id}");
@@ -27,8 +37,22 @@ namespace Doudsystems.Bcms.Cli {
             }
         }
 
-        public static void Test() {
+        public void Test() {
             Console.WriteLine("Test");
+        }
+
+        private Attendance Json2Attendance(string json) {
+            var options = new JsonSerializerOptions() {
+                WriteIndented = true, PropertyNameCaseInsensitive = true
+            };
+            return JsonSerializer.Deserialize<Attendance>(json, options);
+        }
+
+        private string Attendance2Json(Attendance attn) {
+            var options = new JsonSerializerOptions() {
+                WriteIndented = true, PropertyNameCaseInsensitive = true
+            };
+            return JsonSerializer.Serialize<Attendance>(attn, options);
         }
 
         public BcmsApi() {
